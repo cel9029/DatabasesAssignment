@@ -1,4 +1,4 @@
--- Create roles and grant privileges for
+-- Create roles and grant privileges 
 -- Revoke all existing privileges first
 REVOKE ALL ON ALL TABLES IN SCHEMA public FROM student, porter, handyman;
 
