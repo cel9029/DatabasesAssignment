@@ -1,4 +1,4 @@
--- Create roles and grant privileges a
+-- Create roles and grant privileges for
 -- Revoke all existing privileges first
 REVOKE ALL ON ALL TABLES IN SCHEMA public FROM student, porter, handyman;
 
@@ -53,7 +53,7 @@ GRANT USAGE ON SEQUENCE damage_bill_damage_id_seq TO handyman;
 -- Test student role with sequence access
 --SET ROLE student;
 
--- This should work now
+-- Should work 
 --INSERT INTO "order" (student_id, room_no, menu_id, date, time, quantity) 
 --VALUES (1, 3, 1, '2025-02-15', '20:00', 1);
 
