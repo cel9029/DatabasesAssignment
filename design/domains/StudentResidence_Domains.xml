@@ -1,0 +1,54 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<DomainFile class="oracle.dbtools.crest.model.design.DomainFileWrapper" fileName="StudentResidence_Domains">
+<domains>
+<Domain class="oracle.dbtools.crest.model.design.Domain" name="NUMERIC_8_2_0" id="65EC9026-E7CF-7C80-BACE-DDE2D076F75F">
+<createdBy>vengiezsny</createdBy>
+<createdTime>2025-10-29 14:24:43 UTC</createdTime>
+<ownerDesignName>design</ownerDesignName>
+<avTSortOrder>0</avTSortOrder>
+<dataTypePrecision>8</dataTypePrecision>
+<dataTypeScale>2</dataTypeScale>
+<dataTypeSize>0</dataTypeSize>
+<fileName>StudentResidence_Domains</fileName>
+<logicalDatatype>LOGDT019</logicalDatatype>
+</Domain>
+<Domain class="oracle.dbtools.crest.model.design.Domain" name="VARCHAR_0_0_100" id="6D206334-EE3B-2AB2-9503-9F1DABC62FC6">
+<createdBy>vengiezsny</createdBy>
+<createdTime>2025-10-29 14:24:43 UTC</createdTime>
+<ownerDesignName>design</ownerDesignName>
+<avTSortOrder>0</avTSortOrder>
+<dataTypePrecision>0</dataTypePrecision>
+<dataTypeScale>0</dataTypeScale>
+<dataTypeSize>100</dataTypeSize>
+<fileName>StudentResidence_Domains</fileName>
+<logicalDatatype>LOGDT024</logicalDatatype>
+</Domain>
+<Domain class="oracle.dbtools.crest.model.design.Domain" name="Integer_0_0_0" id="929CCDAF-CA10-0A8D-CFEA-13B0E58BCAE8">
+<createdBy>vengiezsny</createdBy>
+<createdTime>2025-10-29 14:24:43 UTC</createdTime>
+<ownerDesignName>design</ownerDesignName>
+<avTSortOrder>0</avTSortOrder>
+<fileName>StudentResidence_Domains</fileName>
+<logicalDatatype>LOGDT011</logicalDatatype>
+</Domain>
+<Domain class="oracle.dbtools.crest.model.design.Domain" name="Date_0_0_0" id="99FFA169-455F-1BD2-9690-9F9D7ABA494B">
+<createdBy>vengiezsny</createdBy>
+<createdTime>2025-10-29 14:24:43 UTC</createdTime>
+<ownerDesignName>design</ownerDesignName>
+<avTSortOrder>0</avTSortOrder>
+<fileName>StudentResidence_Domains</fileName>
+<logicalDatatype>LOGDT007</logicalDatatype>
+</Domain>
+<Domain class="oracle.dbtools.crest.model.design.Domain" name="VARCHAR_0_0_50" id="C62F0529-B171-1B47-AE4B-47AAABC3FA71">
+<createdBy>vengiezsny</createdBy>
+<createdTime>2025-10-29 14:24:43 UTC</createdTime>
+<ownerDesignName>design</ownerDesignName>
+<avTSortOrder>0</avTSortOrder>
+<dataTypePrecision>0</dataTypePrecision>
+<dataTypeScale>0</dataTypeScale>
+<dataTypeSize>50</dataTypeSize>
+<fileName>StudentResidence_Domains</fileName>
+<logicalDatatype>LOGDT024</logicalDatatype>
+</Domain>
+</domains>
+</DomainFile>
