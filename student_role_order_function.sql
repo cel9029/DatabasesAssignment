@@ -1,4 +1,4 @@
--- 2.2_place_student_order.sql
+-- 2.place_student_order.sql
 -- Programmed Transaction for Student Role
 -- PL/pgSQL function to place food orders with comprehensive error checking
 
