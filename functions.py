@@ -1,5 +1,7 @@
 import psycopg2, getpass, pandas as pd
+import sys
 from psycopg2 import Error
+from datetime import datetime
 try:
     username = input('Enter your Username: ')
     pw = input('Enter your password: ')
@@ -289,3 +291,4 @@ finally:
     else:
 
         print("Terminating")
+
