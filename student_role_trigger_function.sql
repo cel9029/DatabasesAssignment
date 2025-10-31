@@ -1,4 +1,4 @@
--- 2.3_curfew_trigger.sql
+-- 3.curfew_trigger.sql
 -- Constraint Trigger for Automatic Eviction
 -- PL/pgSQL trigger function that enforces curfew violation limits
 
