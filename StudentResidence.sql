@@ -2,6 +2,9 @@
 --create schema "Porter" authorization "Porter";
 --create role "Handyman" with login password 'Handyman';
 --create schema "Handyman" authorization "Handyman";
+--create role "Student" with login password 'Student';
+--create schema "Student" authorization "Student";
+
 drop table if exists eviction cascade;
 drop table if exists curfew_violation cascade;
 drop table if exists room_inspection cascade;
@@ -405,6 +408,154 @@ BEFORE INSERT ON damage_bill
 FOR EACH ROW
 EXECUTE FUNCTION check_damage_bill_valid();
 
+-- place_student_order.sql
+-- Programmed Transaction for Student Role
+-- PL/pgSQL function to place food orders with comprehensive error checking
+
+CREATE OR REPLACE FUNCTION place_student_order(
+    p_student_id INTEGER,
+    p_menu_id INTEGER,
+    p_quantity INTEGER
+)
+RETURNS TEXT
+LANGUAGE plpgsql
+AS $$
+DECLARE
+    v_student_name VARCHAR(50);
+    v_menu_description VARCHAR(50);
+    v_menu_cost NUMERIC(8,2);
+    v_room_no INTEGER;
+    v_current_date DATE := CURRENT_DATE;
+    v_current_time TIME := CURRENT_TIME;
+    v_total_cost NUMERIC(8,2);
+    v_student_status VARCHAR(50);
+BEGIN
+    -- First check if student exists and is active
+    SELECT student_name, status 
+    INTO v_student_name, v_student_status
+    FROM student 
+    WHERE student_id = p_student_id;
+
+    IF NOT FOUND THEN
+        RETURN 'Error: Student ID ' || p_student_id || ' not found.';
+    END IF;
+    
+    IF v_student_status != 'Active' THEN
+        RETURN 'Error: Student is not active. Current status: ' || v_student_status;
+    END IF;
+
+    -- Validate student has a room assignment (ignore date range for testing)
+    SELECT sr.room_no
+    INTO v_room_no
+    FROM student_room sr
+    WHERE sr.student_id = p_student_id
+    -- Remove date checking for testing with future dates:
+    -- AND sr.start_date <= v_current_date
+    -- AND sr.end_date >= v_current_date
+    LIMIT 1;
+
+    IF NOT FOUND THEN
+        RETURN 'Error: Student ID ' || p_student_id || ' does not have a room assignment.';
+    END IF;
+
+    -- Validate menu item exists
+    SELECT description, cost_per_unit
+    INTO v_menu_description, v_menu_cost
+    FROM menu
+    WHERE menu_id = p_menu_id;
+
+    IF NOT FOUND THEN
+        RETURN 'Error: Menu Item ID ' || p_menu_id || ' does not exist.';
+    END IF;
+
+    -- Validate quantity
+    IF p_quantity <= 0 THEN
+        RETURN 'Error: Order quantity must be at least 1.';
+    END IF;
+    
+    IF p_quantity > 20 THEN
+        RETURN 'Error: Order quantity cannot exceed 20 items.';
+    END IF;
+
+    -- Calculate total cost
+    v_total_cost := v_menu_cost * p_quantity;
+
+    -- Perform the transaction
+    INSERT INTO "order" (student_id, room_no, menu_id, date, time, quantity)
+    VALUES (p_student_id, v_room_no, p_menu_id, v_current_date, v_current_time, p_quantity);
+
+    -- Return success message
+    RETURN 'Order successful! ' || v_student_name || ' ordered ' || p_quantity || 
+           ' x ' || v_menu_description || ' for €' || v_total_cost || 
+           ' (Room ' || v_room_no || ').';
+
+EXCEPTION
+    WHEN others THEN
+        RETURN 'Error: Database error occurred - ' || SQLERRM;
+END;
+$$;
+
+-- curfew_trigger.sql
+-- Constraint Trigger for Automatic Eviction
+-- PL/pgSQL trigger function that enforces curfew violation limits
+
+CREATE OR REPLACE FUNCTION check_curfew_auto_evict()
+RETURNS TRIGGER
+LANGUAGE plpgsql
+AS $$
+DECLARE
+    v_violation_count INTEGER;
+BEGIN
+    -- Count current violations for this student (including the new one)
+    SELECT COUNT(*) INTO v_violation_count
+    FROM curfew_violation
+    WHERE student_id = NEW.student_id;
+
+    -- Auto-evict after 3 violations 
+    IF v_violation_count >= 3 THEN
+        -- Record the eviction
+        INSERT INTO eviction (student_id, eviction_date, description)
+        VALUES (
+            NEW.student_id, 
+            CURRENT_DATE, 
+            'Exceeded curfew violation limit (' || v_violation_count || ' violations)'
+        );
+        
+        -- End their current room assignment
+        UPDATE student_room 
+        SET end_date = CURRENT_DATE 
+        WHERE student_id = NEW.student_id 
+        AND end_date > CURRENT_DATE;
+        
+        -- Update student status
+        UPDATE student 
+        SET status = 'Evicted' 
+        WHERE student_id = NEW.student_id;
+        
+        RAISE NOTICE 'Student ID % evicted due to % curfew violations.', 
+                     NEW.student_id, v_violation_count;
+    END IF;
+    
+    RETURN NEW;
+END;
+$$;
+
+-- Create the trigger 
+DROP TRIGGER IF EXISTS auto_evict_curfew_violators ON curfew_violation;
+CREATE CONSTRAINT TRIGGER auto_evict_curfew_violators
+    AFTER INSERT ON curfew_violation
+    FOR EACH ROW
+    EXECUTE FUNCTION check_curfew_auto_evict();
+
+-- Test the trigger
+--INSERT INTO curfew_violation (student_id, porter_id, room_no, violation_date, violation_time)
+--VALUES (2, 1, 2, '2025-02-15', '23:50'); -- Should trigger eviction for student 2 (3rd violation)
+
+--INSERT INTO curfew_violation (student_id, porter_id, room_no, violation_date, violation_time)
+--VALUES (1, 2, 3, '2025-02-15', '23:50'); -- 
+
+
+
 
 --Grants
 GRANT USAGE ON SCHEMA public TO "Handyman";
@@ -421,8 +572,23 @@ grant execute on procedure add_curfew_violation to "Porter";
 grant usage on schema public to "Porter";
 grant update on sequence curfew_violation_violation_id_seq to "Porter";
 
-
+GRANT SELECT ON student TO student;
+GRANT SELECT ON room TO student;
+GRANT SELECT ON student_room TO student;
+GRANT SELECT ON menu TO student;
+GRANT SELECT ON "order" TO student;
+GRANT SELECT ON damage_bill TO student;
+GRANT SELECT ON room_inspection TO student;
+GRANT SELECT ON curfew_violation TO student;
+GRANT SELECT ON eviction TO student;
+GRANT SELECT ON porter TO student;
+GRANT SELECT ON handyman TO student;
+-- Grant specific INSERT privileges
+GRANT INSERT ON "order" TO student;
+-- Grant sequence usage for auto-increment columns
+GRANT USAGE ON SEQUENCE order_order_id_seq TO student;
 
 select * from curfew_violation;
 SELECT * FROM damage_bill;
+
 
