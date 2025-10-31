@@ -1,4 +1,4 @@
--- 2.curfew_trigger.sql
+-- 2.3_curfew_trigger.sql
 -- Constraint Trigger for Automatic Eviction
 -- PL/pgSQL trigger function that enforces curfew violation limits
 
@@ -14,7 +14,7 @@ BEGIN
     FROM curfew_violation
     WHERE student_id = NEW.student_id;
 
-    -- Auto-evict after 3 violations (based on demo data pattern)
+    -- Auto-evict after 3 violations 
     IF v_violation_count >= 3 THEN
         -- Record the eviction
         INSERT INTO eviction (student_id, eviction_date, description)
@@ -43,16 +43,16 @@ BEGIN
 END;
 $$;
 
--- Create the trigger --should fail at first 
+-- Create the trigger 
 DROP TRIGGER IF EXISTS auto_evict_curfew_violators ON curfew_violation;
-CREATE TRIGGER auto_evict_curfew_violators
+CREATE CONSTRAINT TRIGGER auto_evict_curfew_violators
     AFTER INSERT ON curfew_violation
     FOR EACH ROW
     EXECUTE FUNCTION check_curfew_auto_evict();
 
 -- Test the trigger
---INSERT INTO curfew_violation (student_id, porter_id, room_no, violation_date, violation_time)
---VALUES (2, 1, 2, '2025-02-15', '23:50'); -- Should trigger eviction for student 2 (3rd violation)
+INSERT INTO curfew_violation (student_id, porter_id, room_no, violation_date, violation_time)
+VALUES (2, 1, 2, '2025-02-15', '23:50'); -- Should trigger eviction for student 2 (3rd violation)
 
 
 
