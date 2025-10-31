@@ -4,7 +4,7 @@ Python program to demonstrate place_student_order() function
 
 Student: Vengie Legaspi
 Number: C20366171
-Date: October 2025
+Date:  31 October 2025
 """
 
 import psycopg2
