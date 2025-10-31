@@ -1,3 +1,5 @@
+--create role "Porter" with login password 'Porter';
+--create schema "Porter" authorization "Porter";
 drop table if exists eviction cascade;
 drop table if exists curfew_violation cascade;
 drop table if exists room_inspection cascade;
@@ -175,11 +177,11 @@ values
 (3, '2025-02-20', 'Exceeded curfew violation limit'),
 (2, '2025-03-20', 'Unpaid damage bill');
 
-select * from student;
-select * from room;
-select * from porter;
-select * from handyman;
-select * from student_room;
+--select * from student;
+--select * from room;
+--select * from porter;
+--select * from handyman;
+--select * from student_room;
 
 select s.student_id, s.student_name, r.room_no, 
 r.location, o.date, o.time, m.menu_id, 
@@ -190,7 +192,103 @@ join student s using (student_id)
 join room r using (room_no)
 join menu m using (menu_id);
 
-select * from damage_bill;
-select * from room_inspection; 
+--select * from damage_bill;
+--select * from room_inspection; 
+--select * from curfew_violation;
+--select * from eviction;
+
+
+create or replace procedure add_curfew_violation (
+	p_student_id curfew_violation.student_id%type,
+	p_porter_id curfew_violation.porter_id%type,
+	p_room_no curfew_violation.room_no%type
+)
+language plpgsql
+as $$
+declare
+	v_student int;
+	v_porter int;
+	v_valid_room int;
+	v_violations int;
+begin
+	-- Check if Student exists
+	select count(*) into v_student
+	from student
+	where student_id = p_student_id;
+	
+	if v_student = 0 then
+		raise info 'No such Student';
+	end if;
+	
+	-- Check if Porter exists
+	select count(*) into v_porter
+	from porter
+	where porter_id = p_porter_id;
+	
+	if v_porter = 0 then
+		raise info 'No such Porter';
+	end if;
+
+	-- Check if students lives in a room
+	select count(*) into v_valid_room
+	from student_room
+	where student_id = p_student_id
+	and room_no = p_room_no;
+	
+	if v_valid_room = 0 then
+		raise info 'No such Student lives in room';
+	end if;
+	
+	-- Add curfew violation
+	insert into curfew_violation (student_id, porter_id, room_no, violation_date, violation_time)
+	values (p_student_id, p_porter_id, p_room_no, current_date, localtime);
+	
+	raise info 'Curfew Violation recorded successfully';
+
+exception
+	when others then
+		rollback;
+		raise info 'An Error occurred';
+end;
+$$;
+
+create or replace function prevent_excessive_violations()
+returns trigger
+language plpgsql
+as $$
+declare
+    v_count integer;
+begin
+    -- Count violations for this student in the same month
+    select COUNT(*)
+    into v_count
+    from curfew_violation
+    where student_id = new.student_id;
+
+    -- If already 5, block the new insert
+    if v_count >= 5 then
+        raise exception
+            'Student % already has 5 curfew violations this month. Insert blocked.',
+            new.student_id;
+    end if;
+
+    return new;
+end;
+$$;
+
+create trigger check_violation_limit
+after insert on curfew_violation
+for each row
+execute function prevent_excessive_violations();
+
+grant select on table student to "Porter";
+grant select on table student_room to "Porter";
+grant select on table porter to "Porter";
+grant select on table curfew_violation to "Porter";
+grant insert on table curfew_violation to "Porter";
+grant execute on procedure add_curfew_violation to "Porter";
+grant usage on schema public to "Porter";
+grant update on sequence curfew_violation_violation_id_seq to "Porter";
+
 select * from curfew_violation;
-select * from eviction;
+
