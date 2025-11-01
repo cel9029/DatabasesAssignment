@@ -571,7 +571,7 @@ grant insert on table curfew_violation to "Porter";
 grant execute on procedure add_curfew_violation to "Porter";
 grant usage on schema public to "Porter";
 grant update on sequence curfew_violation_violation_id_seq to "Porter";
-
+grant usage on schema public to "Student";
 GRANT SELECT ON student TO student;
 GRANT SELECT ON room TO student;
 GRANT SELECT ON student_room TO student;
@@ -590,5 +590,6 @@ GRANT USAGE ON SEQUENCE order_order_id_seq TO student;
 
 select * from curfew_violation;
 SELECT * FROM damage_bill;
+
 
 
