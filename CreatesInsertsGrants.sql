@@ -201,19 +201,34 @@ join menu m using (menu_id);
 --select * from room_inspection; 
 --select * from curfew_violation;
 --select * from eviction;
+
 --Grants
+-- Grant SELECT on all tables to all roles
+GRANT SELECT ON student TO student, porter, handyman;
+GRANT SELECT ON room TO student, porter, handyman;
+GRANT SELECT ON student_room TO student, porter, handyman;
+GRANT SELECT ON menu TO student, porter, handyman;
+GRANT SELECT ON "order" TO student, porter, handyman;
+GRANT SELECT ON damage_bill TO student, porter, handyman;
+GRANT SELECT ON room_inspection TO student, porter, handyman;
+GRANT SELECT ON curfew_violation TO student, porter, handyman;
+GRANT SELECT ON eviction TO student, porter, handyman;
+GRANT SELECT ON porter TO student, porter, handyman;
+GRANT SELECT ON handyman TO student, porter, handyman;
+
+-- Grant specific INSERT privileges
+GRANT INSERT ON "order" TO student;
+GRANT INSERT ON room_inspection TO porter;
+GRANT INSERT ON curfew_violation TO porter;
+GRANT INSERT ON damage_bill TO handyman,porter;
+
+-- Grant sequence usage for auto-increment columns and schema
+GRANT USAGE ON SEQUENCE order_order_id_seq TO student;
+GRANT USAGE ON SEQUENCE room_inspection_inspection_id_seq TO porter;
+GRANT USAGE ON SEQUENCE curfew_violation_violation_id_seq TO porter;
+GRANT USAGE ON SEQUENCE damage_bill_damage_id_seq TO handyman,porter;
+GRANT USAGE ON SCHEMA public TO "Student";
 GRANT USAGE ON SCHEMA public TO "Handyman";
-GRANT SELECT ON ALL TABLES IN SCHEMA public TO "Handyman";
-GRANT INSERT ON damage_bill TO "Handyman";
-GRANT USAGE ON SEQUENCE damage_bill_damage_id_seq TO "Handyman";
-GRANT EXECUTE ON PROCEDURE record_damage_bill(INT, INT, INT, INT, VARCHAR, INT) TO "Handyman";
-grant select on table student to "Porter";
-grant select on table student_room to "Porter";
-grant select on table porter to "Porter";
-grant select on table curfew_violation to "Porter";
-grant insert on table curfew_violation to "Porter";
-grant execute on procedure add_curfew_violation to "Porter";
-grant usage on schema public to "Porter";
-grant update on sequence curfew_violation_violation_id_seq to "Porter";
+Grant usage on schema public to "Porter";
 
 
