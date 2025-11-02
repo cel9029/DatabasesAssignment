@@ -2,6 +2,9 @@
 --create schema "Porter" authorization "Porter";
 --create role "Handyman" with login password 'Handyman';
 --create schema "Handyman" authorization "Handyman";
+--create role "Student" with login password 'Student';
+--create schema "Student" authorization "Student";
+
 drop table if exists eviction cascade;
 drop table if exists curfew_violation cascade;
 drop table if exists room_inspection cascade;
