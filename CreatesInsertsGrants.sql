@@ -203,32 +203,40 @@ join menu m using (menu_id);
 --select * from eviction;
 
 --Grants
--- Grant SELECT on all tables to all roles
-GRANT SELECT ON student TO student, porter, handyman;
-GRANT SELECT ON room TO student, porter, handyman;
-GRANT SELECT ON student_room TO student, porter, handyman;
-GRANT SELECT ON menu TO student, porter, handyman;
-GRANT SELECT ON "order" TO student, porter, handyman;
-GRANT SELECT ON damage_bill TO student, porter, handyman;
-GRANT SELECT ON room_inspection TO student, porter, handyman;
-GRANT SELECT ON curfew_violation TO student, porter, handyman;
-GRANT SELECT ON eviction TO student, porter, handyman;
-GRANT SELECT ON porter TO student, porter, handyman;
-GRANT SELECT ON handyman TO student, porter, handyman;
-
+grant select on table "C22455366".student to "C23748139";
+grant select on table "C22455366".student_room to "C23748139";
+grant select on table "C22455366".handyman to "C23748139";
+grant select on table "C22455366".porter to "C23748139";
+grant select on table "C22455366".room to "C23748139";
+grant select on table "C22455366".damage_bill to "C23748139";
+GRANT USAGE ON SCHEMA public TO "C23748139";
+GRANT SELECT ON ALL TABLES IN SCHEMA public TO "C23748139";
+GRANT INSERT ON "C22455366".damage_bill TO "C23748139";
+GRANT USAGE ON SEQUENCE "C22455366".damage_bill_damage_id_seq TO "C23748139";
+GRANT EXECUTE ON PROCEDURE "C22455366".record_damage_bill(INT, INT, INT, INT, VARCHAR, INT) TO "C23748139";
+grant select on table "C22455366".student to "C22455366";
+grant select on table "C22455366".student_room to "C22455366";
+grant select on table "C22455366".porter to "C22455366";
+grant select on table "C22455366".curfew_violation to "C22455366";
+grant insert on table "C22455366".curfew_violation to "C22455366";
+grant execute on procedure "C22455366".add_curfew_violation to "C22455366";
+grant usage on schema public to "C22455366";
+grant update on sequence "C22455366".curfew_violation_violation_id_seq to "C22455366";
+grant usage on schema public to "C20366171";
+GRANT SELECT ON "C22455366".student TO "C20366171";
+GRANT SELECT ON "C22455366".room TO "C20366171";
+GRANT SELECT ON "C22455366".student_room TO "C20366171";
+GRANT SELECT ON "C22455366".menu TO "C20366171";
+GRANT SELECT ON "C22455366"."order" TO "C20366171";
+GRANT SELECT ON "C22455366".damage_bill TO "C20366171";
+GRANT SELECT ON "C22455366".room_inspection TO "C20366171";
+GRANT SELECT ON "C22455366".curfew_violation TO "C20366171";
+GRANT SELECT ON "C22455366".eviction TO "C20366171";
+GRANT SELECT ON "C22455366".porter TO "C20366171";
+GRANT SELECT ON "C22455366".handyman TO "C20366171";
 -- Grant specific INSERT privileges
-GRANT INSERT ON "order" TO student;
-GRANT INSERT ON room_inspection TO porter;
-GRANT INSERT ON curfew_violation TO porter;
-GRANT INSERT ON damage_bill TO handyman,porter;
-
--- Grant sequence usage for auto-increment columns and schema
-GRANT USAGE ON SEQUENCE order_order_id_seq TO student;
-GRANT USAGE ON SEQUENCE room_inspection_inspection_id_seq TO porter;
-GRANT USAGE ON SEQUENCE curfew_violation_violation_id_seq TO porter;
-GRANT USAGE ON SEQUENCE damage_bill_damage_id_seq TO handyman,porter;
-GRANT USAGE ON SCHEMA public TO "Student";
-GRANT USAGE ON SCHEMA public TO "Handyman";
-Grant usage on schema public to "Porter";
+GRANT INSERT ON "C22455366"."order" TO "C20366171";
+-- Grant sequence usage for auto-increment columns
+GRANT USAGE ON SEQUENCE "C22455366".order_order_id_seq TO "C20366171";
 
 
