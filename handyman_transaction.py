@@ -1,12 +1,13 @@
-import psycopg2
-
+import psycopg2, getpass, pandas as pd
+from psycopg2 import Error
 def main():
     conn = psycopg2.connect(
-        host="localhost",
-        port=54325,
+        host="147.252.250.51",
+        port=5432,
         dbname="postgres",
-        user="Handyman",
-        password="Handyman"
+        user="C23748139",
+        password="C23748139",
+        options='-c search_path="C22455366",public'
     )
 
     cur = conn.cursor()
@@ -20,11 +21,19 @@ def main():
 
     try:
         cur.execute(
+            
             "CALL record_damage_bill(%s, %s, %s, %s, %s, %s)",
             (room_no, student_id, porter_id, handyman_id, description, repair_cost)
         )
         conn.commit()
         print("Added to Database")
+        posgreSQL_select_Query = 'select * from damage_bill'
+        cur.execute(posgreSQL_select_Query)
+        df = pd.DataFrame(
+            cur.fetchall(),
+            columns=['damage_id', 'room_no', 'student_id', 'porter_id', 'handyman_id', 'date', 'description', 'repair_cost', 'due_date' ]
+        )
+        print(df)
     except Exception as e:
         conn.rollback()
         print("Error:", e)
