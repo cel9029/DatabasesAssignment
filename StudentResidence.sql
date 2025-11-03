@@ -1,3 +1,4 @@
+set search_path = "C22455366";
 --create role "Porter" with login password 'Porter';
 --create schema "Porter" authorization "Porter";
 --create role "Handyman" with login password 'Handyman';
@@ -558,38 +559,41 @@ CREATE CONSTRAINT TRIGGER auto_evict_curfew_violators
 
 
 --Grants
-GRANT USAGE ON SCHEMA public TO "Handyman";
-GRANT SELECT ON ALL TABLES IN SCHEMA public TO "Handyman";
-GRANT INSERT ON damage_bill TO "Handyman";
-GRANT USAGE ON SEQUENCE damage_bill_damage_id_seq TO "Handyman";
-GRANT EXECUTE ON PROCEDURE record_damage_bill(INT, INT, INT, INT, VARCHAR, INT) TO "Handyman";
-grant select on table student to "Porter";
-grant select on table student_room to "Porter";
-grant select on table porter to "Porter";
-grant select on table curfew_violation to "Porter";
-grant insert on table curfew_violation to "Porter";
-grant execute on procedure add_curfew_violation to "Porter";
-grant usage on schema public to "Porter";
-grant update on sequence curfew_violation_violation_id_seq to "Porter";
-grant usage on schema public to "Student";
-GRANT SELECT ON student TO student;
-GRANT SELECT ON room TO student;
-GRANT SELECT ON student_room TO student;
-GRANT SELECT ON menu TO student;
-GRANT SELECT ON "order" TO student;
-GRANT SELECT ON damage_bill TO student;
-GRANT SELECT ON room_inspection TO student;
-GRANT SELECT ON curfew_violation TO student;
-GRANT SELECT ON eviction TO student;
-GRANT SELECT ON porter TO student;
-GRANT SELECT ON handyman TO student;
+grant select on table "C22455366".student to "C23748139";
+grant select on table "C22455366".student_room to "C23748139";
+grant select on table "C22455366".handyman to "C23748139";
+grant select on table "C22455366".porter to "C23748139";
+grant select on table "C22455366".room to "C23748139";
+grant select on table "C22455366".damage_bill to "C23748139";
+GRANT USAGE ON SCHEMA public TO "C23748139";
+GRANT SELECT ON ALL TABLES IN SCHEMA public TO "C23748139";
+GRANT INSERT ON "C22455366".damage_bill TO "C23748139";
+GRANT USAGE ON SEQUENCE "C22455366".damage_bill_damage_id_seq TO "C23748139";
+GRANT EXECUTE ON PROCEDURE "C22455366".record_damage_bill(INT, INT, INT, INT, VARCHAR, INT) TO "C23748139";
+grant select on table "C22455366".student to "C22455366";
+grant select on table "C22455366".student_room to "C22455366";
+grant select on table "C22455366".porter to "C22455366";
+grant select on table "C22455366".curfew_violation to "C22455366";
+grant insert on table "C22455366".curfew_violation to "C22455366";
+grant execute on procedure "C22455366".add_curfew_violation to "C22455366";
+grant usage on schema public to "C22455366";
+grant update on sequence "C22455366".curfew_violation_violation_id_seq to "C22455366";
+grant usage on schema public to "C20366171";
+GRANT SELECT ON "C22455366".student TO "C20366171";
+GRANT SELECT ON "C22455366".room TO "C20366171";
+GRANT SELECT ON "C22455366".student_room TO "C20366171";
+GRANT SELECT ON "C22455366".menu TO "C20366171";
+GRANT SELECT ON "C22455366"."order" TO "C20366171";
+GRANT SELECT ON "C22455366".damage_bill TO "C20366171";
+GRANT SELECT ON "C22455366".room_inspection TO "C20366171";
+GRANT SELECT ON "C22455366".curfew_violation TO "C20366171";
+GRANT SELECT ON "C22455366".eviction TO "C20366171";
+GRANT SELECT ON "C22455366".porter TO "C20366171";
+GRANT SELECT ON "C22455366".handyman TO "C20366171";
 -- Grant specific INSERT privileges
-GRANT INSERT ON "order" TO student;
+GRANT INSERT ON "C22455366"."order" TO "C20366171";
 -- Grant sequence usage for auto-increment columns
-GRANT USAGE ON SEQUENCE order_order_id_seq TO student;
+GRANT USAGE ON SEQUENCE "C22455366".order_order_id_seq TO "C20366171";
 
 select * from curfew_violation;
 SELECT * FROM damage_bill;
-
-
-
