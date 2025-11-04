@@ -7,7 +7,7 @@ def main():
         dbname="postgres",
         user="C23748139",
         password="C23748139",
-        options='-c search_path="C22455366",public'
+        options='-c search_path="C22455366",public' #Might need to be changed
     )
 
     cur = conn.cursor()
