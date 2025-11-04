@@ -123,20 +123,13 @@ GRANT EXECUTE ON PROCEDURE record_damage_bill(INT, INT, INT, INT, VARCHAR, INT) 
 GRANT INSERT, SELECT ON damage_bill TO handyman;
 GRANT USAGE ON SEQUENCE damage_bill_damage_id_seq TO handyman;
 
-
-CALL record_damage_bill(
-    2,    -- room_no
-    2,    -- student_id
-    1,    -- porter_id
-    1,    -- handyman_id
-    'Broken wardrobe door',
-    150
-);
+--Calling the function
+--CALL record_damage_bill(2, 2, 1, 1, 'Broken wardrobe door', 150);
 
 --Check result
 SELECT * FROM damage_bill ORDER BY damage_id DESC LIMIT 5;
 
--- Invalid test (should fail )
+-- Trigger test (should fail )
  --INSERT INTO damage_bill(room_no, student_id, porter_id, handyman_id, date, description, repair_cost, due_date)
  --VALUES (3, 3, 2, 2, '2025-02-10', '', -50, '2025-02-05');
 
